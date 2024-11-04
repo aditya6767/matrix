@@ -2,7 +2,7 @@ import os
 import requests
 
 MATRIX_BASE_URL = os.getenv("MATRIX_BASE_URL", "http://localhost:8008")
-ACCESS_TOKEN = os.getenv("ACCESS_TOKEN", "7b309479a0f4bcffad5e0532f60e28ce")
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
 
 class MatrixApi:
