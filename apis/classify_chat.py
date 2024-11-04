@@ -3,6 +3,7 @@ import requests
 import json
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://0.0.0.0:11434/api/generate")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3")
 
 
 def classify_chat_with_llama(chat_text):
@@ -21,7 +22,6 @@ def classify_chat_with_llama(chat_text):
     - "Are you coming over for Thanksgiving this year?"
     - "Please tell dad I'll be there by 6 PM."
     - "How's grandma doing?"
-    - "beta"
 
     Classification: family
 
@@ -32,8 +32,6 @@ def classify_chat_with_llama(chat_text):
     - "Can we reschedule the meeting to next week?"
     - "I'll need the latest report for review."
     - "Check with the finance team about the budget approval."
-    - "Match kab hoga?"
-    - "Kab aa rahe"
 
     Classification: nonfamily
 
@@ -76,6 +74,7 @@ def classify_chat_with_llama(chat_text):
     - "Forward the email to the client and let them know."
     - "Let's discuss the project timeline tomorrow."
     - "Is the contract ready for review?"
+    - "Hello, I'm a WhatsApp bridge bot."
 
     Classification: nonfamily
 
@@ -90,7 +89,7 @@ def classify_chat_with_llama(chat_text):
     """
     
     payload = {
-        "model": "llama3",
+        "model": OLLAMA_MODEL,
         "prompt": prompt,
         "temperature": 0.0
     }
@@ -127,12 +126,7 @@ def classify_chat_with_llama(chat_text):
             return "nonfamily"
         else:
             return "uncertain"
-    
+
     except requests.exceptions.RequestException as e:
         print(f"Error communicating with Llama 2 model: {e}")
         return "error"
-
-
-# chat_text = "Let's plan a  dinner this weekend."
-# classification = classify_chat_with_llama(chat_text)
-# print("Classification:", classification)
