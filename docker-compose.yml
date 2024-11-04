@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  synapse:
+    image: matrixdotorg/synapse:latest
+    container_name: synapse
+    environment:
+      - SYNAPSE_SERVER_NAME=localhost
+      - SYNAPSE_REPORT_STATS=yes
+    volumes:
+      - ./data/synapse:/data
+    ports:
+      - "8008:8008"
+    restart: always
+
+  mautrix-whatsapp:
+    image: dock.mau.dev/mautrix/whatsapp:latest
+    container_name: mautrix-whatsapp
+    environment:
+      - MAUTRIX_WHATSAPP_HOMESERVER_URL=http://synapse:8008
+      - MAUTRIX_WHATSAPP_DOMAIN=localhost
+      - MAUTRIX_WHATSAPP_BRIDGE_PORT=29318
+    env_file: matrix.env
+    depends_on:
+      - synapse
+    volumes:
+      - ./data/mautrix-whatsapp:/data
+    ports:
+      - "29318:29318"
+    restart: always
+  
+  postgres:
+    image: postgres:13
+    container_name: mautrix_postgres
+    environment:
+      POSTGRES_DB: "mautrix_whatsapp"
+      POSTGRES_USER: "mautrix_user"
+      POSTGRES_PASSWORD: "matrix123"
+    ports:
+      - 5332:5432
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    restart: always
